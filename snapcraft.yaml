@@ -1,0 +1,41 @@
+name: owncloud-client
+version: 2.1.1ubuntu1
+summary: ownCloud Desktop Client
+description: >
+  The ownCloud Desktop Client is a tool to synchronize files from an ownCloud
+  Server with your local computer.
+
+apps:
+  owncloud-client:
+    command: launch-owncloud-client
+    plugs:
+      - network
+      - network-bind
+      - unity7
+
+parts:
+  owncloud-client:
+    plugin: cmake
+    source: https://github.com/owncloud/client.git
+    source-tag: v2.1.1
+    configflags:
+      - -DCMAKE_BUILD_TYPE="Release"
+
+      # Prevent libs from going into arch-specific dirs
+      - -DCMAKE_INSTALL_LIBDIR=lib
+    build-packages:
+      - sed
+      - libqt4-dev
+      - libqtwebkit-dev
+      - qtkeychain-dev
+      - libqtkeychain0
+      - libsqlite3-dev
+      - python-sphinx
+      - libssl-dev
+    stage-packages:
+      - libxml2
+
+  owncloud-launcher:
+    plugin: copy
+    files:
+      launch-owncloud-client: bin/
